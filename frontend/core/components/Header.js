@@ -10,6 +10,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import { makeStyles } from "@mui/styles";
 import { Container } from "@mui/system";
 import Link from "next/link";
+import ListItem from "@mui/material/ListItem";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -20,9 +21,18 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: "#333",
   },
 
+  appbarSecondary: {
+    backgroundColor: "#555",
+  },
+
   toolbarMain: {
     padding: "0px",
     minHeight: 60,
+  },
+
+  toolbarSecondary: {
+    padding: "0px",
+    minHeight: 30,
   },
 
   logo: {
@@ -32,9 +42,27 @@ const useStyles = makeStyles((theme) => ({
     padding: 0,
     cursor: "pointer !important",
   },
+
+  menuList: {
+    display: "flex",
+    flexDirection: "row",
+    padding: 0,
+  },
+
+  meunListItem: {
+    padding: 0,
+    paddingRight: 20,
+    cursor: "pointer",
+    textTransform: "uppercase",
+  },
+
+  listItemLink: {
+    color: "#fff",
+    textDecoration: "none",
+  },
 }));
 
-export default function ButtonAppBar() {
+export default function Header({ categories }) {
   const classes = useStyles();
 
   return (
@@ -58,7 +86,7 @@ export default function ButtonAppBar() {
           </Toolbar>
         </Container>
       </AppBar>
-      {/* 
+
       <AppBar
         position="relative"
         elevation={0}
@@ -66,10 +94,19 @@ export default function ButtonAppBar() {
       >
         <Container maxWidth="lg">
           <Toolbar className={classes.toolbarSecondary}>
-            <List className={classes.menuList}></List>
+            Categories:
+            <List className={classes.menuList}>
+              {categories.map((category) => (
+                <ListItem key={category.name} className={classes.menuListItem}>
+                  <Link href={`/category/${encodeURIComponent(category.slug)}`}>
+                    <a className={classes.listItemLink}>{category.name}</a>
+                  </Link>
+                </ListItem>
+              ))}
+            </List>
           </Toolbar>
         </Container>
-      </AppBar> */}
+      </AppBar>
     </nav>
   );
 }

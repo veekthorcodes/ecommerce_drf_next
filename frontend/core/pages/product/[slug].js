@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function Product({ post }) {
+function Product({ post, categories }) {
   const classes = useStyles();
   const router = useRouter();
 
@@ -55,7 +55,7 @@ function Product({ post }) {
       <Head>
         <title>{post.title}</title>
       </Head>
-      <Header />
+      <Header categories={categories} />
       <Container maxWidth="md">
         <h1>{post.title} details page</h1>
         <Grid container spacing={0}>
@@ -123,8 +123,11 @@ export async function getStaticProps({ params }) {
   const res = await fetch(`http://localhost:8000/api/${params.slug}/`);
   const post = await res.json();
 
+  const ress = await fetch("http://localhost:8000/api/category/");
+  const categories = await ress.json();
+
   return {
-    props: { post },
+    props: { post, categories },
   };
 }
 

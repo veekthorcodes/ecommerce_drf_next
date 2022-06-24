@@ -10,7 +10,8 @@ import {
 
 import Link from "next/link";
 import { makeStyles } from "@mui/styles";
-import Header from "../components/Header";
+import Header from "../../components/Header";
+import { useRouter } from "next/router";
 
 const useStyles = makeStyles((theme) => ({
   example: {
@@ -37,17 +38,29 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+
+
+
 function Home({ posts, categories }) {
   const classes = useStyles();
 
+  const router = useRouter();
+
+  if (router.isFallback) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <>
-      <Header categories={categories}/>
+      <Header categories={categories} />
       <main>
         <Container className={classes.cardGrid} maxWidth="lg">
           <Grid container spacing={2}>
             {posts.map((post) => (
-              <Link key={post.id} href={`product/${encodeURIComponent(post.slug)}`}>
+              <Link
+                key={post.id}
+                href={`product/${encodeURIComponent(post.slug)}`}
+              >
                 <Grid item xs={6} sm={4} md={3}>
                   <Card className={classes.card} elevation={0}>
                     {/* <CardMedia
@@ -75,12 +88,21 @@ function Home({ posts, categories }) {
   );
 }
 
-export async function getStaticProps() {
-  const res = await fetch("http://localhost:8000/api/");
+export async function getStaticPaths() {
+  return {
+    paths: [{ params: { slug: "shoes" } }],
+    fallback: true,
+  };
+}
+
+export async function getStaticProps({ params }) {
+  const res = await fetch(`http://localhost:8000/api/category/${params.slug}`);
   const posts = await res.json();
 
   const ress = await fetch("http://localhost:8000/api/category/");
   const categories = await ress.json();
+
+
 
   return {
     props: {
